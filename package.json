@@ -1,6 +1,6 @@
 {
   "name": "@nielskrijger/mysql-migrations",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Basic Node.js library to execute mysql migration files",
   "main": "dist/index.js",
   "author": "Niels Krijger <niels@kryger.nl>",
