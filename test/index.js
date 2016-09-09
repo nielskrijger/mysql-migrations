@@ -37,11 +37,11 @@ describe('MySQL migrations', () => {
 
   describe('run(...)', () => {
     it('should run migrations once', () => {
-      return migrations.run(`${__dirname}/migrations`).then(() => {
         expect(messages.length).to.equal(3);
         expect(messages[1]).to.contain('Executed migration \'1-migration\'');
         expect(messages[2]).to.contain('Executed migration \'2-add-user\'');
-        return migrations.run(`${__dirname}/migrations`);
+      return migrations.run(`${__dirname}/migrations/*.js`).then(() => {
+        return migrations.run(`${__dirname}/migrations/*.js`);
       }).then(() => {
         expect(messages.length).to.equal(6);
         expect(messages[4]).to.contain('Migration \'1-migration\' was executed on');

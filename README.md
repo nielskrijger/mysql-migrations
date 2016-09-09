@@ -21,7 +21,7 @@ const migrations = new Migrations({
   password: 'test',
 }, {});
 
-migrations.run(__dirname + '/migrations');
+migrations.run(`${__dirname}/migrations/*.js`);
 ```
 
 **Options**

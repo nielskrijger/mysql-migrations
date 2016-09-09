@@ -52,21 +52,22 @@ class Migrations {
   /**
    * Returns array with migration files.
    */
-  _loadMigrationFiles(directory) {
-    const migrationFiles = fs.readdirSync(directory);
-    migrationFiles.sort();
-    const migrations = [];
-    for (const migrationFile of migrationFiles) {
-      const migration = require(`${directory}/${migrationFile}`); // eslint-disable-line global-require
-      if (!migration.id) {
-        this.warn(`Migration file ${migrationFile} does not export an 'id'`);
-      } else if (!migration.up) {
-        this.warn(`Migration file ${migrationFile} does not export a function 'up()'`);
-      } else {
-        migrations.push(migration);
+  _loadMigrationFiles(glob) {
+    return globby(glob).then(migrationFiles => {
+      migrationFiles.sort();
+      const migrations = [];
+      for (const migrationFile of migrationFiles) {
+        const migration = require(migrationFile); // eslint-disable-line global-require
+        if (!migration.id) {
+          throw new Error(`Migration file ${migrationFile} does not export an 'id'`);
+        } else if (!migration.up) {
+          throw new Error(`Migration file ${migrationFile} does not export a function 'up()'`);
+        } else {
+          migrations.push(migration);
+        }
       }
-    }
-    return migrations;
+      return migrations;
+    });
   }
 
   /**
