@@ -5,7 +5,7 @@ mysql:
   ports:
    - "3306:3306"
   environment:
-    MYSQL_ROOT_PASSWORD: test
+    MYSQL_ROOT_PASSWORD: secret
     MYSQL_DATABASE: mysql_migrations
     MYSQL_USER: mysql_migrations
     MYSQL_PASSWORD: mysql_migrations
