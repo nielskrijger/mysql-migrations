@@ -2,30 +2,27 @@ import { connect, query } from '@nielskrijger/mysql';
 import fs from 'fs';
 import path from 'path';
 import moment from 'moment';
+import EventEmitter from 'events';
+import globby from 'globby';
 
 /**
  * Configures migrations runner.
  */
-class Migrations {
+class Migrations extends EventEmitter {
 
   /**
    * Instantiates a new mysql migrations runner and initializes database connection
    * pool.
    */
-  constructor(mysqlConfig, config) {
+  constructor(mysqlConfig) {
+    super();
+
     const requiredProperties = ['database', 'host', 'user', 'password'];
     requiredProperties.forEach(prop => {
       if (!mysqlConfig || mysqlConfig[prop] === undefined) {
         throw new Error(`Must specify mysql ${prop}`);
       }
     });
-
-    this.cfg = Object.assign({
-      error: console.log,
-      warn: console.log,
-      info: console.log,
-    }, config);
-
     connect(mysqlConfig);
   }
 
@@ -126,15 +123,11 @@ class Migrations {
   }
 
   info(msg) {
-    this.cfg.info(msg);
-  }
-
-  warn(msg) {
-    this.cfg.warn(msg);
+    this.emit('log', 'info', msg);
   }
 
   error(msg) {
-    this.cfg.error(msg);
+    this.emit('log', 'error', msg);
   }
 }
 

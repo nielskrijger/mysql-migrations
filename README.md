@@ -22,28 +22,27 @@ const migrations = new Migrations({
 }, {});
 
 migrations.run(`${__dirname}/migrations/*.js`);
+migrations.on('log', (lvl, msg) => {
+  console.log(`${lvl}: ${msg}`);
+});
 ```
 
-**Options**
+### Options
 
-The signature `new Migrations(mysqlCfg, options)` accepts mysql connection options which are identical to [mysql.createPool()](https://github.com/mysqljs/mysql#pooling-connections). At a minimum `host`, `database`, `user` and `password` must be specified.
+The signature `new Migrations(config)` accepts mysql connection options which are identical to [mysql.createPool()](https://github.com/mysqljs/mysql#pooling-connections). At a minimum `host`, `database`, `user` and `password` must be specified.
 
-The second argument accepts the following options:
+### Events
 
-Option | Description
--------|-------------------------
-info   | Function that logs info messages. Default `console.log`.
-warn   | Function that logs warnings. Default `console.log`.
-error  | Function that logs error messages. Default `console.log`.
+* `log` Emitted with two arguments; `(lvl, msg)`.
 
 # Run tests
 
-Make sure to have a running MySQL server with the following database setup:
+Start `docker-compose up` to start a MySQL server with correct table and user.
+
+If you're not using docker-compose, make sure to have a running MySQL server with the following database setup:
 
 ```sql
 CREATE DATABASE mysql_migrations;
 CREATE USER 'mysql_migrations'@'%' IDENTIFIED BY 'mysql_migrations';
 GRANT ALL PRIVILEGES ON mysql_migrations.* TO 'mysql_migrations'@'%' WITH GRANT OPTION;
 ```
-
-For convenience you can run `docker-compose up` to start a MySQL server.
